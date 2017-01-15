@@ -19,6 +19,7 @@ class Venta(models.Model):
     cliente = models.CharField('Pedido por',max_length=300)
     tipo_cliente = models.ForeignKey(TipoCliente, null=False, blank=False)
     valor_total = models.IntegerField('Valor', null=False, blank=False)
+    documento = models.IntegerField('Documento', null=True, blank=True)
     
     def __unicode__(self):
         return str(unicode(self.fecha.replace(tzinfo=None)) + ' - ' + unicode(self.cliente) + ' - ' + unicode(self.tipo_arreglo))
