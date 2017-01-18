@@ -6,3 +6,5 @@ from .models import *
 
 admin.site.register(TipoCliente)
 admin.site.register(Venta)
+
+admin.site.register(Cliente, ClienteAdmin)

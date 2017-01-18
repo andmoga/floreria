@@ -5,5 +5,5 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^list$', views.list, name='list'),
-    url(r'^factura$', views.factura, name='factura'),
+    url(r'^factura/(?P<pk>\w+)$', views.factura, name='factura'),
 ]
