@@ -24,20 +24,37 @@ class Cliente(models.Model):
         
     def imprimir(self):
         return format_html(
-            '<a href="https://flores-ardilom.c9users.io/vidanueva/factura/{}" class="btn btn-default">Imprimir</a>',
+            '<a href="https://floristeria-andmoga.c9users.io/vidanueva/factura/{}" class="btn btn-default">Imprimir</a>',
             self.pk
         )
 
 class ClienteAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'tipo_cliente', 'documento', 'telefono', 'imprimir')
-    
-class Venta(models.Model):
-    fecha = models.DateTimeField('Fecha de venta', default=datetime.datetime.now)
-    tipo_arreglo = models.CharField('Tipo de arreglo', max_length=300)
-    nombre_fallecido = models.CharField('Fallecido', max_length=300)
-    cantidad_arreglos = models.IntegerField('Cantidad', default=1)
-    cliente = models.ForeignKey(Cliente, null=False, blank=False)
-    valor_total = models.IntegerField('Valor', null=False, blank=False)
+    list_display = ('pk', 'nombre', 'tipo_cliente', 'documento', 'telefono', 'imprimir')
+
+class TipoArreglo(models.Model):
+    nombre = models.CharField('Tipo de arreglo', max_length=300)
+    precio = models.IntegerField('Valor', null=False, blank=False)
     
     def __unicode__(self):
-        return str(unicode(self.fecha.replace(tzinfo=None)) + ' - ' + unicode(self.cliente) + ' - ' + unicode(self.tipo_arreglo))
+        return unicode(self.nombre)
+
+class Venta(models.Model):
+    fecha = models.DateTimeField('Fecha de venta', default=datetime.datetime.now)
+    arreglos = models.ManyToManyField(TipoArreglo, through='CantidadArreglo')
+    nombre_fallecido = models.CharField('Fallecido', max_length=300)
+    cliente = models.ForeignKey(Cliente, null=False, blank=False)
+    
+    def __unicode__(self):
+        return str(unicode(self.fecha.replace(tzinfo=None)) + ' - ' + unicode(self.cliente) + ' - ' + unicode(self.nombre_fallecido))
+        
+    class Meta:
+        ordering = ['-fecha']
+        
+
+class CantidadArreglo(models.Model):
+    venta = models.ForeignKey(Venta)
+    tipo_arreglo = models.ForeignKey(TipoArreglo)
+    cantidad = models.IntegerField('Cantidad', default=1)
+    
+    def __unicode__(self):
+        return unicode(self.venta) + ' - ' + unicode(self.cantidad) + ' - ' + unicode(self.tipo_arreglo)
