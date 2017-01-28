@@ -24,13 +24,13 @@ class Cliente(models.Model):
         
     def imprimir(self):
         return format_html(
-            '<a href="https://floreria-andmoga.c9users.io/factura/{}" class="btn btn-default">Imprimir</a>',
+            '<a href="http://localhost:8000/factura/{}" class="btn btn-default">Imprimir</a>',
             self.pk
         )
         
     def imprimir_por_fecha(self):
         return format_html(
-            '<a href="https://floreria-andmoga.c9users.io/facturaFormulario/{}" class="btn btn-default">Formulario</a>',
+            '<a href="http://localhost:8000/facturaFormulario/{}" class="btn btn-default">Formulario</a>',
             self.pk
         )
 
