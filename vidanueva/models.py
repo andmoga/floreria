@@ -24,12 +24,18 @@ class Cliente(models.Model):
         
     def imprimir(self):
         return format_html(
-            '<a href="https://floristeria-andmoga.c9users.io/vidanueva/factura/{}" class="btn btn-default">Imprimir</a>',
+            '<a href="https://floreria-andmoga.c9users.io/factura/{}" class="btn btn-default">Imprimir</a>',
+            self.pk
+        )
+        
+    def imprimir_por_fecha(self):
+        return format_html(
+            '<a href="https://floreria-andmoga.c9users.io/facturaFormulario/{}" class="btn btn-default">Formulario</a>',
             self.pk
         )
 
 class ClienteAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'nombre', 'tipo_cliente', 'documento', 'telefono', 'imprimir')
+    list_display = ('pk', 'nombre', 'tipo_cliente', 'documento', 'telefono', 'imprimir', 'imprimir_por_fecha')
 
 class TipoArreglo(models.Model):
     nombre = models.CharField('Tipo de arreglo', max_length=300)

@@ -24,6 +24,13 @@ def list(request):
     }
     return HttpResponse(template.render(context, request))
     
+def facturaFecha(request, pk):
+    template = loader.get_template('facturaFecha.html')
+    context = {
+        'cliente': Cliente.objects.get(pk=pk),
+    }
+    return HttpResponse(template.render(context, request))
+    
 def factura(request, pk):
     tpl = DocxTemplate('vidanueva/templates/docx/factura.docx')
     # todo las llaves se mantienen pero los valores deben ser datos dinamicos
@@ -72,8 +79,10 @@ def facturaEntreFechas(request, pk, fechaInicial, fechaFinal):
     cliente = Cliente.objects.get(pk=pk)
     ventas = Venta.objects.filter(cliente=cliente, fecha__range=(datetime.datetime.strptime(fechaInicial, "%Y%m%d").date(), datetime.datetime.strptime(fechaFinal, "%Y%m%d").date()))
     arreglos_aux = []
-    arreglos = CantidadArreglo.objects.filter(venta__cliente=cliente)
+    arreglos = CantidadArreglo.objects.filter(venta__in=ventas)
     subtotal = 0
+    print ventas
+    print arreglos
     for arreglo in arreglos:
         arreglos_aux.append({ 'fecha':arreglo.venta.fecha.astimezone(pytz.timezone('America/Bogota')).strftime('%d-%m-%Y %H:%M'),
                             'cantidad':arreglo.cantidad,

@@ -1,0 +1,93 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/bootstrap-theme.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/datepicker.css' %}" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div style="height:50px"></div>
+    <div class="row">
+        <div class='col-md-4' style="width:40%">
+            <div class="form-group">
+                <div class='input-group date' data-date-format="dd-mm-yyyy" data-date="12-02-2012">
+                    <input type='text' class="form-control" id='dpd1' />
+                    <span class="input-group-addon" onclick="show1()">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class='col-md-4' style="width:40%">
+            <div class="form-group">
+                <div class='input-group date' data-date-format="dd-mm-yyyy" data-date="12-02-2012">
+                    <input type='text' class="form-control" id='dpd2' />
+                    <span class="input-group-addon" onclick="show2()">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class='col-md-6'>
+        <a href="" id="button-link"><button type="button" class="btn btn-default">Imprimir</button></a>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/moment.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-datepicker.js' %}"></script> 
+<script type="text/javascript">
+    myFormat = function(data){
+        var dd = data.getDate();
+        var mm = data.getMonth()+1; //January is 0!
+        
+        var yyyy = data.getFullYear();
+        if(dd<10){
+            dd='0'+dd;
+        } 
+        if(mm<10){
+            mm='0'+mm;
+        } 
+        return yyyy+''+mm+''+dd;
+    }
+
+    var nowTemp = new Date();
+    var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+     
+    var checkin = $('#dpd1').datepicker({
+      onRender: function(date) {
+        return date.valueOf() > now.valueOf() ? 'disabled' : '';
+      }
+    }).on('changeDate', function(ev) {
+        var newDate = new Date(ev.date)
+        newDate.setDate(newDate.getDate() + 1);
+        checkout.setValue(newDate);
+        $("#button-link").attr("href", '/factura/{{cliente.pk}}/' + myFormat(moment(checkin.date).toDate()) + '/' +  myFormat(moment(checkout.date).toDate()));
+        checkin.hide();
+        $('#dpd2')[0].focus();
+    }).data('datepicker');
+    var checkout = $('#dpd2').datepicker({
+      onRender: function(date) {
+        return date.valueOf() <= checkin.date.valueOf() || date.valueOf() > now.valueOf() ? 'disabled' : '';
+      }
+    }).on('changeDate', function(ev) {
+        $("#button-link").attr("href", '/factura/{{cliente.pk}}/' + myFormat(moment(checkin.date).toDate()) + '/' +  myFormat(moment(checkout.date).toDate()));
+        checkout.hide();
+    }).data('datepicker');
+    
+    show1 = function(){
+        $('#dpd1')[0].focus();
+    }
+    show2 = function(){
+        $('#dpd2')[0].focus();
+    }
+</script>
+</body>
+
+</html>
