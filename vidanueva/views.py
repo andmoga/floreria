@@ -31,6 +31,12 @@ def facturaFecha(request, pk):
     }
     return HttpResponse(template.render(context, request))
     
+def vacio(nn):
+    if not nn:
+        return " "
+    else:
+        return nn
+    
 def factura(request, pk):
     tpl = DocxTemplate('vidanueva/templates/docx/factura.docx')
     # todo las llaves se mantienen pero los valores deben ser datos dinamicos
@@ -50,8 +56,8 @@ def factura(request, pk):
     context = {
         'fecha_actual' : unicode(datetime.datetime.now(pytz.timezone('America/Bogota')).strftime('%d-%m-%Y %H:%M')),
         'cliente' : unicode(cliente.nombre),
-        'documento' : cliente.documento,
-        'telefono' : cliente.telefono,
+        'documento' : vacio(cliente.documento),
+        'telefono' : vacio(cliente.telefono),
         'ventas': arreglos_aux,
         'total' : int(subtotal*1.19),
         'iva' : int(subtotal*0.19),
@@ -94,8 +100,8 @@ def facturaEntreFechas(request, pk, fechaInicial, fechaFinal):
     context = {
         'fecha_actual' : unicode(datetime.datetime.now(pytz.timezone('America/Bogota')).strftime('%d-%m-%Y %H:%M')),
         'cliente' : unicode(cliente.nombre),
-        'documento' : cliente.documento,
-        'telefono' : cliente.telefono,
+        'documento' : vacio(cliente.documento),
+        'telefono' : vacio(cliente.telefono),
         'ventas': arreglos_aux,
         'total' : int(subtotal*1.19),
         'iva' : int(subtotal*0.19),
